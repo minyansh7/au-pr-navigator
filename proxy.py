@@ -13,6 +13,8 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
 
+_SSL = ssl.create_default_context()
+
 PORT = 8765
 API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -38,16 +40,21 @@ class ProxyHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
+    def _json(self, code, data):
+        body = json.dumps(data).encode()
+        self.send_response(code)
+        self._cors()
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_OPTIONS(self):
         self.send_response(200); self._cors(); self.end_headers()
 
     def do_GET(self):
         if self.path == "/health":
-            body = json.dumps({"ok": True}).encode()
-            self.send_response(200); self._cors()
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers(); self.wfile.write(body)
+            self._json(200, {"ok": True})
         else:
             self.send_response(404); self.end_headers()
 
@@ -60,10 +67,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
         key = payload.pop("apiKey", None) or API_KEY
 
         if not key:
-            err = json.dumps({"error": "No API key — set ANTHROPIC_API_KEY or pass --key"}).encode()
-            self.send_response(400); self._cors()
-            self.send_header("Content-Type", "application/json")
-            self.end_headers(); self.wfile.write(err); return
+            self._json(400, {"error": "No API key — set ANTHROPIC_API_KEY or pass --key"})
+            return
 
         req = Request(
             "https://api.anthropic.com/v1/messages",
@@ -73,7 +78,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
             method="POST",
         )
         try:
-            with urlopen(req, context=ssl.create_default_context()) as resp:
+            with urlopen(req, context=_SSL) as resp:
                 self.send_response(200); self._cors()
                 self.send_header("Content-Type",
                                   resp.headers.get("Content-Type", "text/event-stream"))
@@ -83,10 +88,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     if not chunk: break
                     self.wfile.write(chunk); self.wfile.flush()
         except HTTPError as e:
-            body = e.read()
-            self.send_response(e.code); self._cors()
-            self.send_header("Content-Type", "application/json")
-            self.end_headers(); self.wfile.write(body)
+            self._json(e.code, json.loads(e.read() or b'{}'))
 
 
 if __name__ == "__main__":

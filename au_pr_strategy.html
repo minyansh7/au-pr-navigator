@@ -279,6 +279,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <!-- Settings modal -->
 <div id="modal-bg" onclick="if(event.target===this)closeSettings()">
   <div id="modal">
+    <div id="proxy-error" style="display:none;background:rgba(240,85,85,.1);border:1px solid rgba(240,85,85,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:var(--red);margin-bottom:12px">
+      Proxy is not running.<br>In your terminal: <code style="font-family:monospace;background:var(--bg3);padding:2px 6px;border-radius:3px">python3 proxy.py --key sk-ant-YOUR_KEY</code>
+    </div>
     <div class="modal-title">API Settings</div>
     <div class="field">
       <label>Anthropic API Key</label>
@@ -332,7 +335,6 @@ function loadFromFile(e) {
 
 // ── Render LIVE INTEL panel ──
 const ICONS = { critical: '🔴', important: '🟠', monitor: '🟡' };
-const COLORS = { critical: 'var(--red)', important: 'var(--amber)', monitor: 'var(--yellow)' };
 
 function renderIntel() {
   const panel = document.getElementById('intel-panel');
@@ -379,29 +381,36 @@ function renderIntel() {
 function startCountdown(id, isoDate) {
   const el = document.getElementById('cd-' + id);
   if (!el) return;
-  function tick() {
+  let lastCls = '';
+  const tick = () => {
     const diff = new Date(isoDate) - Date.now();
     if (diff <= 0) { el.textContent = 'DEADLINE PASSED'; el.className = 'countdown ok'; return; }
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
+    const cls = 'countdown' + (d < 2 ? '' : d < 7 ? ' warn' : ' ok');
+    if (cls !== lastCls) el.className = lastCls = cls;
     el.textContent = `⏱ ${d}d ${h}h ${m}m ${s}s`;
-    el.className = 'countdown' + (d < 2 ? '' : d < 7 ? ' warn' : ' ok');
     setTimeout(tick, 1000);
-  }
+  };
   tick();
 }
 </script>
 <script>
 // ── English toggle ──
+function englishLabel(level) {
+  const pts = level === 'superior' ? 85 : 80;
+  return { pts, text: (level === 'superior' ? 'Superior' : 'Competent') + ' · ' + pts + ' pts' };
+}
+
 function setEnglish(level) {
   englishLevel = level;
   localStorage.setItem('eng', level);
   document.querySelectorAll('.eng-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
-  const pts = level === 'superior' ? 85 : 80;
+  const { pts, text } = englishLabel(level);
   document.getElementById('score-now').textContent = pts;
-  document.getElementById('meta-english').textContent = (level === 'superior' ? 'Superior' : 'Competent') + ' · ' + pts + ' pts';
+  document.getElementById('meta-english').textContent = text;
   checkStale();
 }
 
@@ -414,9 +423,7 @@ function checkStale() {
   const banner = document.getElementById('stale-banner');
   if (staleMonitoring || staleEnglish) {
     banner.classList.add('visible');
-    banner.textContent = staleMonitoring
-      ? '⚠ Monitoring data has been updated since this strategy was generated. Click Re-run to refresh.'
-      : '⚠ English proficiency changed. Click Re-run to refresh strategy.';
+    banner.textContent = '⚠ Settings changed since last run. Click Re-run to refresh.';
   } else {
     banner.classList.remove('visible');
   }
@@ -440,8 +447,7 @@ function loadSavedStrategy() {
   if (!saved) return false;
   renderMarkdown(saved.text);
   document.getElementById('meta-run').textContent = 'Run: ' + saved.ts;
-  document.getElementById('meta-english').textContent =
-    (saved.english === 'superior' ? 'Superior' : 'Competent') + ' · ' + (saved.english === 'superior' ? 85 : 80) + ' pts';
+  document.getElementById('meta-english').textContent = englishLabel(saved.english).text;
   return true;
 }
 
@@ -540,9 +546,8 @@ async function runStrategy() {
   const proxyOk = await updateProxyStatus();
 
   if (!proxyOk) {
+    document.getElementById('proxy-error').style.display = 'block';
     openSettings();
-    document.getElementById('modal').insertAdjacentHTML('afterbegin',
-      '<div style="background:rgba(240,85,85,.1);border:1px solid rgba(240,85,85,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:var(--red);margin-bottom:12px">Proxy is not running.<br>In your terminal: <code style="font-family:monospace;background:var(--bg3);padding:1px 5px;border-radius:3px">python3 proxy.py --key sk-ant-YOUR_KEY</code></div>');
     return;
   }
   if (!key) { openSettings(); return; }
@@ -628,7 +633,7 @@ function openSettings() {
 }
 function closeSettings() {
   document.getElementById('modal-bg').classList.remove('open');
-  document.querySelectorAll('#modal > div[style*="red"]').forEach(el => el.remove());
+  document.getElementById('proxy-error').style.display = 'none';
 }
 function saveSettings() {
   const key = document.getElementById('key-input').value.trim();
