@@ -280,17 +280,20 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <div id="modal-bg" onclick="if(event.target===this)closeSettings()">
   <div id="modal">
     <div id="proxy-error" style="display:none;background:rgba(240,85,85,.1);border:1px solid rgba(240,85,85,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:var(--red);margin-bottom:12px">
-      Proxy is not running.<br>In your terminal: <code style="font-family:monospace;background:var(--bg3);padding:2px 6px;border-radius:3px">python3 proxy.py --key sk-ant-YOUR_KEY</code>
+      Proxy unreachable. Check the URL below, or run <code style="font-family:monospace;background:var(--bg3);padding:2px 5px;border-radius:3px">python3 proxy.py --key sk-ant-...</code> locally.
     </div>
     <div class="modal-title">API Settings</div>
     <div class="field">
-      <label>Anthropic API Key</label>
+      <label>Proxy URL <span style="color:var(--text3);font-weight:400">(Cloudflare Worker or local)</span></label>
+      <input type="text" id="proxy-input" placeholder="https://au-pr-monitor-proxy.YOUR_NAME.workers.dev" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Anthropic API Key <span style="color:var(--text3);font-weight:400">(local proxy only — leave blank for Cloudflare)</span></label>
       <input type="password" id="key-input" placeholder="sk-ant-..." autocomplete="off">
     </div>
     <div class="modal-note">
-      Your key is stored only in <code>localStorage</code> — never sent anywhere except directly to the Anthropic API via the local proxy.<br><br>
-      Start the proxy first:<br>
-      <code>python3 proxy.py --key sk-ant-YOUR_KEY</code>
+      <strong style="color:var(--text)">Cloud (recommended):</strong> deploy <code>worker/</code> to Cloudflare, set the Worker URL above. API key lives in Cloudflare — never in the browser.<br><br>
+      <strong style="color:var(--text)">Local:</strong> run <code>python3 proxy.py --key sk-ant-YOUR_KEY</code>, set URL to <code>http://localhost:8765</code>.
     </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
@@ -306,7 +309,7 @@ const EMBEDDED = {"generated":"2026-04-24T09:15:00+10:00","date_display":"24 Apr
 let monData = null;
 let englishLevel = localStorage.getItem('eng') || 'competent';
 let isRunning = false;
-const PROXY = 'http://localhost:8765';
+const PROXY = () => localStorage.getItem('proxyUrl') || 'http://localhost:8765';
 
 // ── Monitoring data loading ──
 async function loadMonitoringData() {
@@ -524,7 +527,7 @@ function renderMarkdown(md) {
 // ── Proxy health check ──
 async function checkProxy() {
   try {
-    const r = await fetch(PROXY + '/health', { signal: AbortSignal.timeout(1500) });
+    const r = await fetch(PROXY() + '/health', { signal: AbortSignal.timeout(1500) });
     return r.ok;
   } catch { return false; }
 }
@@ -565,11 +568,11 @@ async function runStrategy() {
   const system = `You are a MARA-registered senior Australian migration lawyer with 15+ years practice specialising in skilled ICT migration. Write in direct expert language — the applicant understands migration well. Use specific subclass numbers, ANZSCO codes, effective dates, points figures. No explaining of basic visa concepts. Use markdown headers (##), bullet points, and bold for key figures.`;
 
   try {
-    const res = await fetch(PROXY + '/messages', {
+    const res = await fetch(PROXY() + '/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        apiKey: key,
+        ...(key && { apiKey: key }),  // only sent for local proxy; Cloudflare Worker ignores it
         model: 'claude-sonnet-4-6',
         max_tokens: 4096,
         stream: true,
@@ -628,6 +631,7 @@ async function runStrategy() {
 
 // ── Settings modal ──
 function openSettings() {
+  document.getElementById('proxy-input').value = localStorage.getItem('proxyUrl') || '';
   document.getElementById('key-input').value = localStorage.getItem('apiKey') || '';
   document.getElementById('modal-bg').classList.add('open');
 }
@@ -636,9 +640,12 @@ function closeSettings() {
   document.getElementById('proxy-error').style.display = 'none';
 }
 function saveSettings() {
+  const url = document.getElementById('proxy-input').value.trim().replace(/\/$/, '');
   const key = document.getElementById('key-input').value.trim();
+  if (url) localStorage.setItem('proxyUrl', url);
   if (key) localStorage.setItem('apiKey', key);
   closeSettings();
+  updateProxyStatus();
 }
 
 // ── Init ──
