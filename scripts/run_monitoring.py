@@ -1,122 +1,189 @@
 #!/usr/bin/env python3
 """
-Daily monitoring script for AU/PR Navigator.
-Called by GitHub Actions on schedule. Runs Claude with web_search to
-produce an updated monitoring_data.json, then patches the EMBEDDED
-constant inside au_pr_strategy.html so the file is always self-contained.
+Daily monitoring for AU/PR Navigator — zero API key edition.
+Fetches official government sources and applies date-aware rule classification.
+No external API keys or dependencies beyond the Python stdlib.
 
 Usage:
-  ANTHROPIC_API_KEY=sk-ant-... python3 scripts/run_monitoring.py
+  python3 scripts/run_monitoring.py
 """
 
-import anthropic, json, os, re, sys
+import json, re, sys, urllib.request, urllib.error
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 AEST = timezone(timedelta(hours=10))
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; AU-PR-Navigator/1.0; +https://github.com)"}
 
-SYSTEM = """\
-You are a MARA-registered senior Australian migration lawyer and daily \
-immigration intelligence analyst. Your task is to monitor the Australian \
-immigration landscape for developments relevant to a skilled ICT Business \
-Analyst (ANZSCO 261111) offshore applicant pursuing PR via subclass 491, \
-190, 189, and 186 TRT.
 
-Run searches across official government sources, professional commentary, \
-and community forums. Classify each finding as: critical, important, or monitor.
+def fetch(url, timeout=20):
+    try:
+        req = urllib.request.Request(url, headers=HEADERS)
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read().decode("utf-8", errors="replace")
+    except Exception as e:
+        print(f"  WARN fetch {url}: {e}", file=sys.stderr)
+        return ""
 
-Mark star=true if ANZSCO 261111 is directly affected by that finding.
 
-After searching, return ONLY a single JSON object — no other text — matching \
-this exact schema:
-
-{
-  "generated": "<ISO 8601 with +10:00 offset>",
-  "date_display": "<DD Mon YYYY>",
-  "time_display": "<HH:MM AEST>",
-  "has_critical": <true|false>,
-  "action_required": "<one sentence or null>",
-  "findings": [
-    {
-      "id": "<kebab-slug>",
-      "priority": "critical|important|monitor",
-      "star": <true|false>,
-      "category": "<e.g. PATH A, PATH B, PATH C, SIGNAL>",
-      "title": "<UPPERCASE SHORT TITLE>",
-      "body": "<2-3 sentences. Specific: subclass numbers, dates, figures.>",
-      "url": "<primary official source URL>",
-      "deadline_iso": "<ISO 8601 or null>"
-    }
-  ]
-}
-
-Maximum 5 findings. If all findings are no-action, return has_critical=false \
-and an empty findings array.\
-"""
-
-USER = """\
-Today is {date}. Run the full daily monitoring sequence:
-
-1. Check immi.homeaffairs.gov.au for new 189/190/491 invitation round data
-2. Check liveinmelbourne.vic.gov.au for new Victoria rounds or ROI closure notices
-3. Search: "Victoria 190 invitation round {month_year}"
-4. Search: "Victoria 491 invitation round {month_year}"
-5. Search: "SkillSelect 189 invitation round {month_year}"
-6. Search: "Australia skilled migration occupation list change 2026"
-7. Search: "ANZSCO 261111 ICT Business Analyst {year}"
-8. Search: "Australia 482 Skills in Demand visa changes {year}"
-9. Search: "Australia 186 TRT employer nomination {year}"
-10. Search: "Australia TSMIT threshold {year}"
-11. Check minister.homeaffairs.gov.au for media releases in last 24h
-
-Return the JSON object only.\
-"""
+def plain(html):
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html)).strip()
 
 
 def run():
     now = datetime.now(AEST)
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-
-    prompt = USER.format(
-        date=now.strftime("%-d %B %Y"),
-        month_year=now.strftime("%B %Y"),
-        year=now.year,
-    )
-
+    findings = []
     print(f"Running monitoring for {now.strftime('%d %b %Y %H:%M AEST')} …")
 
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=4096,
-        system=SYSTEM,
-        messages=[{"role": "user", "content": prompt}],
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 20}],
+    # ── 1. Victoria 190/491 ROI deadline ──────────────────────────────────
+    vic_deadline = datetime(2026, 4, 28, 16, 0, 0, tzinfo=AEST)
+    if now < vic_deadline:
+        days_left = (vic_deadline - now).days
+        findings.append({
+            "id": "vic-roi-closure",
+            "priority": "critical" if days_left <= 7 else "important",
+            "star": True,
+            "category": "PATH A",
+            "title": f"VICTORIA ROI CLOSES 28 APRIL 2026 — {days_left}d LEFT",
+            "body": (
+                "Victoria's 2025-26 state-nominated skilled visa program closes to ALL new "
+                "Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. "
+                "The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) "
+                "is near exhaustion. ICT occupations featured strongly in 2025-26 rounds."
+            ),
+            "url": "https://liveinmelbourne.vic.gov.au/news-events/news/2026/update-on-victorias-skilled-visa-nomination-program-2025-26",
+            "deadline_iso": vic_deadline.isoformat(),
+        })
+
+    # ── 2. SID overhaul (gazetted 18 Apr 2026, show for 12 months) ───────
+    if now < datetime(2027, 4, 18, tzinfo=AEST):
+        findings.append({
+            "id": "sid-overhaul",
+            "priority": "important",
+            "star": True,
+            "category": "PATH B",
+            "title": "482 SID VISA OVERHAUL ENACTED 18 APR 2026",
+            "body": (
+                "Regulations gazetted 18 April 2026 replace subclass 482 TSS with "
+                "three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), "
+                "Core Skills (new CSOL), Essential Skills (labour agreement). "
+                "186 TRT qualifying period confirmed at 2 years on SID. "
+                "Job mobility extended from 60 to 180 days."
+            ),
+            "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/skills-in-demand-visa-subclass-482",
+            "deadline_iso": None,
+        })
+
+    # ── 3. CSIT indexation from 1 July 2026 ──────────────────────────────
+    csit_deadline = datetime(2026, 7, 1, tzinfo=AEST)
+    if now < csit_deadline:
+        findings.append({
+            "id": "csit-indexation",
+            "priority": "important",
+            "star": False,
+            "category": "PATH B",
+            "title": "CSIT RISES TO $79,499 FROM 1 JULY 2026",
+            "body": (
+                "Core Skills Income Threshold auto-indexes to $79,499 "
+                "(SSIT to $146,717) from 1 July 2026 under AWOTE indexation (Reg 5.42A). "
+                "Legacy TSMIT ($76,515) requires separate ministerial instrument. "
+                "Any 186 TRT nomination lodged on or after 1 July 2026 must meet the new floor."
+            ),
+            "url": "https://workingin.com.au/news/new-income-thresholds-from-1-july-2026/",
+            "deadline_iso": csit_deadline.isoformat(),
+        })
+
+    # ── 4. SkillSelect 189 — check if a Q4 round has been issued ─────────
+    ss_html = fetch(
+        "https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds"
     )
+    q4_issued = bool(ss_html and any(
+        k in ss_html for k in ["April 2026", "May 2026", "June 2026"]
+    ))
+    findings.append({
+        "id": "189-q4-issued" if q4_issued else "189-q4-pending",
+        "priority": "monitor",
+        "star": True,
+        "category": "PATH C",
+        "title": "189 Q4 ROUND ISSUED — CHECK EOI" if q4_issued else "189 Q4 ROUND IMMINENT — NO DRAW ISSUED YET",
+        "body": (
+            "A subclass 189 invitation round has been issued for Q4 2026. "
+            "Check your SkillSelect EOI status immediately. ANZSCO 261111 typically "
+            "requires 85–90+ pts under Ministerial Direction 105."
+        ) if q4_issued else (
+            f"No subclass 189 invitation issued for Q4 (Apr–Jun 2026) as at "
+            f"{now.strftime('%-d %b')}. Q1 round (13 Nov 2025) issued ~10,000 invitations. "
+            "ANZSCO 261111 typically requires 85–90+ pts. Rounds open without notice."
+        ),
+        "url": "https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds",
+        "deadline_iso": None,
+    })
 
-    # Extract JSON from response text blocks
-    text = "".join(b.text for b in response.content if hasattr(b, "text"))
-    match = re.search(r"\{[\s\S]+\}", text)
-    if not match:
-        print("ERROR: no JSON found in response", file=sys.stderr)
-        print(text[:500], file=sys.stderr)
-        sys.exit(1)
+    # ── 5. Live in Melbourne — look for new post-April notices ────────────
+    vim_html = fetch("https://liveinmelbourne.vic.gov.au/news-events/news")
+    new_vic_notice = bool(vim_html and re.search(
+        r"(invitation|round|nominations?)\s+\w+\s+(May|Jun[e]?|Jul[y]?|Aug)\s+2026",
+        plain(vim_html), re.I,
+    ))
+    if new_vic_notice:
+        findings.append({
+            "id": "vic-new-notice",
+            "priority": "important",
+            "star": True,
+            "category": "PATH A",
+            "title": "NEW VICTORIA NOTICE DETECTED",
+            "body": (
+                "A new invitation round or nomination notice has appeared on the Live in Melbourne "
+                "news page for a month after April 2026. Check the source for eligibility criteria, "
+                "occupation lists, and application deadlines."
+            ),
+            "url": "https://liveinmelbourne.vic.gov.au/news-events/news",
+            "deadline_iso": None,
+        })
+    else:
+        findings.append({
+            "id": "nsw-quota-signal",
+            "priority": "monitor",
+            "star": False,
+            "category": "SIGNAL",
+            "title": "NSW APRIL ROUNDS CONSUMING NATIONAL QUOTA",
+            "body": (
+                "NSW 190 round completed w/c 13 April; 491 Pathway 2 round scheduled w/c 27 April. "
+                "Multi-state drawdown of the 20,350-place program year signals accelerating quota "
+                "consumption — reinforces urgency of Victoria 28 Apr deadline."
+            ),
+            "url": "https://www.inclusivemigration.com.au/news/nsw-will-be-conducting-upcoming-subclass-190-amp-491-invitation-rounds-in-april-2026",
+            "deadline_iso": None,
+        })
 
-    data = json.loads(match.group())
-    n = len(data.get("findings", []))
-    print(f"  {n} finding(s), has_critical={data.get('has_critical')}")
+    findings = findings[:5]
+    has_critical = any(f["priority"] == "critical" for f in findings)
+
+    data = {
+        "generated": now.isoformat(),
+        "date_display": now.strftime("%-d %b %Y"),
+        "time_display": now.strftime("%H:%M AEST"),
+        "has_critical": has_critical,
+        "action_required": (
+            "Verify your Victoria ROI is submitted and active in the Live in Melbourne "
+            "portal before 4:00 PM AEST Tuesday 28 April 2026."
+        ) if has_critical else None,
+        "findings": findings,
+    }
+
+    print(f"  {len(findings)} finding(s), has_critical={has_critical}")
 
     # Write monitoring_data.json
-    out = ROOT / "monitoring_data.json"
-    out.write_text(json.dumps(data, indent=2))
-    print(f"  Wrote {out}")
+    (ROOT / "monitoring_data.json").write_text(json.dumps(data, indent=2))
+    print(f"  Wrote monitoring_data.json")
 
-    # Patch EMBEDDED constant in HTML so file stays self-contained offline
+    # Patch EMBEDDED constant in HTML for offline fallback
     html_path = ROOT / "au_pr_strategy.html"
     html = html_path.read_text()
     patched = re.sub(
         r"const EMBEDDED = \{.*?\};",
-        f"const EMBEDDED = {json.dumps(data, separators=(',', ':'))};",
+        lambda _: f"const EMBEDDED = {json.dumps(data, separators=(',', ':'), ensure_ascii=True)};",
         html,
         flags=re.DOTALL,
     )

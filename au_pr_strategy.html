@@ -114,8 +114,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .main-title{font-size:13px;font-weight:600;color:var(--text)}
 .run-meta{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:10px}
 .meta-pill{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:10px}
-.stale-banner{display:none;background:var(--amber-bg);border-bottom:1px solid rgba(224,138,48,.25);padding:9px 22px;font-size:11px;color:var(--amber)}
-.stale-banner.visible{display:block}
 
 /* ── Strategy output ── */
 #output-wrap{flex:1;overflow-y:auto;padding:20px 22px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
@@ -123,54 +121,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .output-empty{color:var(--text3);font-size:13px;line-height:1.8;padding:30px 0}
 .output-empty .hint{font-size:11px;color:var(--text3);margin-top:8px}
 
-/* markdown output */
-#output h1,#output h2,#output h3,#output h4{color:var(--text);font-weight:600;margin:20px 0 8px;line-height:1.3}
-#output h1{font-size:16px;border-bottom:1px solid var(--border);padding-bottom:8px}
-#output h2{font-size:14px;color:var(--blue)}
-#output h3{font-size:13px;color:var(--text)}
-#output h4{font-size:12px;color:var(--text2)}
-#output p{color:var(--text2);margin-bottom:10px;font-size:13px}
-#output ul,#output ol{margin:6px 0 10px 18px;color:var(--text2);font-size:13px}
-#output li{margin-bottom:3px}
-#output strong{color:var(--text);font-weight:600}
-#output em{color:var(--text2);font-style:italic}
-#output code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--green)}
-#output blockquote{border-left:3px solid var(--blue);margin:10px 0;padding:6px 12px;background:var(--blue-bg);border-radius:0 var(--r) var(--r) 0}
-#output blockquote p{margin:0;color:var(--text)}
-#output hr{border:none;border-top:1px solid var(--border);margin:16px 0}
-.cursor{display:inline-block;width:2px;height:14px;background:var(--blue);margin-left:2px;animation:blink .7s step-end infinite;vertical-align:text-bottom}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* ── Bottom bar ── */
 #bottom-bar{padding:12px 22px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--bg2)}
-#run-btn{flex:1;max-width:280px;padding:10px 18px;background:var(--blue);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
-#run-btn:hover{background:#6f9ef0;transform:translateY(-1px)}
-#run-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-#run-btn .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
-#run-btn.running .btn-text{display:none}
-#run-btn.running .spinner{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
-#settings-btn{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-size:12px;padding:9px 14px;cursor:pointer;font-family:inherit;transition:all .18s}
-#settings-btn:hover{border-color:var(--blue);color:var(--blue)}
-.proxy-status{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--text3)}
-.status-dot.ok{background:var(--green)}
-.status-dot.err{background:var(--red)}
-
-/* ── Settings modal ── */
-#modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center}
-#modal-bg.open{display:flex}
-#modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;width:420px;max-width:90vw;padding:22px}
-.modal-title{font-size:14px;font-weight:600;margin-bottom:14px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:500}
-.field input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-size:12px;padding:8px 10px;font-family:'JetBrains Mono',monospace;outline:none}
-.field input:focus{border-color:var(--blue)}
-.modal-note{font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:14px}
-.modal-note code{font-family:'JetBrains Mono',monospace;background:var(--bg3);padding:1px 5px;border-radius:3px;font-size:10px;color:var(--green)}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end}
-.btn-save{background:var(--blue);border:none;border-radius:5px;color:#fff;font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;font-family:inherit}
-.btn-cancel{background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text2);font-size:12px;padding:8px 14px;cursor:pointer;font-family:inherit}
+#open-btn{flex:1;max-width:280px;padding:10px 18px;background:var(--purple);border:none;border-radius:var(--r);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+#open-btn:hover{background:#b08af7;transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -248,68 +203,31 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <div class="run-meta">
         <span class="meta-pill" id="meta-english">Competent · 80 pts</span>
         <span class="meta-pill" id="meta-intel">Intel: –</span>
-        <span class="meta-pill" id="meta-run">Not run</span>
       </div>
-    </div>
-
-    <div class="stale-banner" id="stale-banner">
-      ⚠ Monitoring data has been updated since this strategy was generated. Click Re-run to refresh.
     </div>
 
     <div id="output-wrap">
       <div id="output">
         <div class="output-empty">
           <strong style="color:var(--text)">Ready to generate your personalised PR strategy.</strong>
-          <div class="hint">Set your English proficiency above, then click <strong style="color:var(--blue)">Run Strategy</strong>.<br>The strategy uses live monitoring intelligence and persists until you re-run.</div>
+          <div class="hint">Set your English proficiency in the sidebar, then click <strong style="color:var(--purple)">Open in Claude.ai ↗</strong>.<br>Your full monitoring intelligence and profile will be pre-loaded into Claude. No API key required.</div>
         </div>
       </div>
     </div>
 
     <div id="bottom-bar">
-      <button id="run-btn" onclick="runStrategy()">
-        <span class="btn-text">▶ Run Strategy</span>
-        <span class="spinner"></span>
-      </button>
-      <button id="settings-btn" onclick="openSettings()">⚙ API Key</button>
-      <span class="proxy-status"><span class="status-dot" id="proxy-dot"></span><span id="proxy-label">checking proxy…</span></span>
+      <button id="open-btn" onclick="openInClaude()">Open in Claude.ai ↗</button>
     </div>
   </main>
 </div>
 
-<!-- Settings modal -->
-<div id="modal-bg" onclick="if(event.target===this)closeSettings()">
-  <div id="modal">
-    <div id="proxy-error" style="display:none;background:rgba(240,85,85,.1);border:1px solid rgba(240,85,85,.3);border-radius:5px;padding:9px 12px;font-size:11px;color:var(--red);margin-bottom:12px">
-      Proxy unreachable. Check the URL below, or run <code style="font-family:monospace;background:var(--bg3);padding:2px 5px;border-radius:3px">python3 proxy.py --key sk-ant-...</code> locally.
-    </div>
-    <div class="modal-title">API Settings</div>
-    <div class="field">
-      <label>Proxy URL <span style="color:var(--text3);font-weight:400">(Cloudflare Worker or local)</span></label>
-      <input type="text" id="proxy-input" placeholder="https://au-pr-monitor-proxy.YOUR_NAME.workers.dev" autocomplete="off">
-    </div>
-    <div class="field">
-      <label>Anthropic API Key <span style="color:var(--text3);font-weight:400">(local proxy only — leave blank for Cloudflare)</span></label>
-      <input type="password" id="key-input" placeholder="sk-ant-..." autocomplete="off">
-    </div>
-    <div class="modal-note">
-      <strong style="color:var(--text)">Cloud (recommended):</strong> deploy <code>worker/</code> to Cloudflare, set the Worker URL above. API key lives in Cloudflare — never in the browser.<br><br>
-      <strong style="color:var(--text)">Local:</strong> run <code>python3 proxy.py --key sk-ant-YOUR_KEY</code>, set URL to <code>http://localhost:8765</code>.
-    </div>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
-      <button class="btn-save" onclick="saveSettings()">Save</button>
-    </div>
-  </div>
-</div>
 <script>
 // ── Embedded fallback monitoring data (updated by daily monitoring run) ──
-const EMBEDDED = {"generated":"2026-04-25T19:08:31+10:00","date_display":"25 Apr 2026","time_display":"19:08 AEST","has_critical":true,"action_required":"Verify your Victoria ROI is submitted and active in the Live in Melbourne portal before 4:00 PM AEST Tuesday 28 April 2026.","findings":[{"id":"vic-roi-closure","priority":"critical","star":true,"category":"PATH A","title":"VICTORIA ROI CLOSES 28 APRIL 2026","body":"Victoria's 2025-26 state-nominated skilled visa program closes to ALL new Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) is near exhaustion. ICT occupations featured strongly in 2025-26 rounds including the most recent round on 17 March 2026.","url":"https://liveinmelbourne.vic.gov.au/news-events/news/2026/update-on-victorias-skilled-visa-nomination-program-2025-26","deadline_iso":"2026-04-28T16:00:00+10:00"},{"id":"sid-overhaul","priority":"important","star":true,"category":"PATH B","title":"482 SID VISA OVERHAUL ENACTED 18 APR 2026","body":"Regulations gazetted 18 April 2026 formally replace subclass 482 TSS with three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), Core Skills (new CSOL), Essential Skills (labour agreement). 186 TRT qualifying period confirmed at 2 years on SID. Job mobility extended from 60 to 180 days.","url":"https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/skills-in-demand-visa-subclass-482","deadline_iso":null},{"id":"csit-indexation","priority":"important","star":false,"category":"PATH B","title":"CSIT RISES TO $79,499 FROM 1 JULY 2026","body":"Core Skills Income Threshold auto-indexes to $79,499 (SSIT to $146,717) from 1 July 2026 under AWOTE indexation (Reg 5.42A). Legacy TSMIT ($76,515) requires separate ministerial instrument. Any 186 TRT nomination lodged on or after 1 July 2026 must meet the new floor.","url":"https://workingin.com.au/news/new-income-thresholds-from-1-july-2026/","deadline_iso":"2026-07-01T00:00:00+10:00"},{"id":"189-q4-pending","priority":"monitor","star":true,"category":"PATH C","title":"189 Q4 ROUND IMMINENT \u2014 NO DRAW ISSUED YET","body":"No subclass 189 invitation issued for Q4 (Apr\u2013Jun 2026) as at 24 Apr. Q1 round (13 Nov 2025) issued ~10,000 invitations. ANZSCO 261111 typically requires 85\u201390+ pts under Ministerial Direction 105. Rounds open without notice.","url":"https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds","deadline_iso":null},{"id":"nsw-quota-signal","priority":"monitor","star":false,"category":"SIGNAL","title":"NSW APRIL ROUNDS CONSUMING NATIONAL QUOTA","body":"NSW 190 round completed w/c 13 April; 491 Pathway 2 round scheduled w/c 27 April. Multi-state drawdown of 20,350-place program year signals accelerating quota consumption.","url":"https://www.inclusivemigration.com.au/news/nsw-will-be-conducting-upcoming-subclass-190-amp-491-invitation-rounds-in-april-2026","deadline_iso":null}]};
+const EMBEDDED = {"generated":"2026-04-25T19:38:39.619491+10:00","date_display":"25 Apr 2026","time_display":"19:38 AEST","has_critical":true,"action_required":"Verify your Victoria ROI is submitted and active in the Live in Melbourne portal before 4:00 PM AEST Tuesday 28 April 2026.","findings":[{"id":"vic-roi-closure","priority":"critical","star":true,"category":"PATH A","title":"VICTORIA ROI CLOSES 28 APRIL 2026 \u2014 2d LEFT","body":"Victoria's 2025-26 state-nominated skilled visa program closes to ALL new Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) is near exhaustion. ICT occupations featured strongly in 2025-26 rounds.","url":"https://liveinmelbourne.vic.gov.au/news-events/news/2026/update-on-victorias-skilled-visa-nomination-program-2025-26","deadline_iso":"2026-04-28T16:00:00+10:00"},{"id":"sid-overhaul","priority":"important","star":true,"category":"PATH B","title":"482 SID VISA OVERHAUL ENACTED 18 APR 2026","body":"Regulations gazetted 18 April 2026 replace subclass 482 TSS with three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), Core Skills (new CSOL), Essential Skills (labour agreement). 186 TRT qualifying period confirmed at 2 years on SID. Job mobility extended from 60 to 180 days.","url":"https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/skills-in-demand-visa-subclass-482","deadline_iso":null},{"id":"csit-indexation","priority":"important","star":false,"category":"PATH B","title":"CSIT RISES TO $79,499 FROM 1 JULY 2026","body":"Core Skills Income Threshold auto-indexes to $79,499 (SSIT to $146,717) from 1 July 2026 under AWOTE indexation (Reg 5.42A). Legacy TSMIT ($76,515) requires separate ministerial instrument. Any 186 TRT nomination lodged on or after 1 July 2026 must meet the new floor.","url":"https://workingin.com.au/news/new-income-thresholds-from-1-july-2026/","deadline_iso":"2026-07-01T00:00:00+10:00"},{"id":"189-q4-pending","priority":"monitor","star":true,"category":"PATH C","title":"189 Q4 ROUND IMMINENT \u2014 NO DRAW ISSUED YET","body":"No subclass 189 invitation issued for Q4 (Apr\u2013Jun 2026) as at 25 Apr. Q1 round (13 Nov 2025) issued ~10,000 invitations. ANZSCO 261111 typically requires 85\u201390+ pts. Rounds open without notice.","url":"https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds","deadline_iso":null},{"id":"nsw-quota-signal","priority":"monitor","star":false,"category":"SIGNAL","title":"NSW APRIL ROUNDS CONSUMING NATIONAL QUOTA","body":"NSW 190 round completed w/c 13 April; 491 Pathway 2 round scheduled w/c 27 April. Multi-state drawdown of the 20,350-place program year signals accelerating quota consumption \u2014 reinforces urgency of Victoria 28 Apr deadline.","url":"https://www.inclusivemigration.com.au/news/nsw-will-be-conducting-upcoming-subclass-190-amp-491-invitation-rounds-in-april-2026","deadline_iso":null}]};
 
 // ── State ──
 let monData = null;
 let englishLevel = localStorage.getItem('eng') || 'competent';
-let isRunning = false;
-const PROXY = () => localStorage.getItem('proxyUrl') || 'http://localhost:8765';
 
 // ── Monitoring data loading ──
 async function loadMonitoringData() {
@@ -328,7 +246,6 @@ function loadFromFile(e) {
     try {
       monData = JSON.parse(ev.target.result);
       renderIntel();
-      checkStale();
       document.getElementById('intel-stamp').textContent = 'Loaded from file';
     } catch { alert('Invalid JSON file'); }
   };
@@ -414,45 +331,8 @@ function setEnglish(level) {
   const { pts, text } = englishLabel(level);
   document.getElementById('score-now').textContent = pts;
   document.getElementById('meta-english').textContent = text;
-  checkStale();
 }
 
-// ── Stale check ──
-function checkStale() {
-  const saved = getSavedStrategy();
-  if (!saved) return;
-  const staleMonitoring = saved.monitoringDate !== (monData && monData.date_display);
-  const staleEnglish = saved.english !== englishLevel;
-  const banner = document.getElementById('stale-banner');
-  if (staleMonitoring || staleEnglish) {
-    banner.classList.add('visible');
-    banner.textContent = '⚠ Settings changed since last run. Click Re-run to refresh.';
-  } else {
-    banner.classList.remove('visible');
-  }
-}
-
-// ── localStorage persistence ──
-function saveStrategy(text) {
-  localStorage.setItem('strategy', JSON.stringify({
-    text, english: englishLevel,
-    monitoringDate: monData && monData.date_display,
-    ts: new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })
-  }));
-}
-
-function getSavedStrategy() {
-  try { return JSON.parse(localStorage.getItem('strategy')); } catch { return null; }
-}
-
-function loadSavedStrategy() {
-  const saved = getSavedStrategy();
-  if (!saved) return false;
-  renderMarkdown(saved.text);
-  document.getElementById('meta-run').textContent = 'Run: ' + saved.ts;
-  document.getElementById('meta-english').textContent = englishLabel(saved.english).text;
-  return true;
-}
 
 // ── Build strategy prompt ──
 function buildPrompt() {
@@ -496,156 +376,15 @@ Please produce my complete personalised PR strategy. Structure your response wit
 Be specific: subclass numbers, ANZSCO codes, effective dates, quota figures, points thresholds. No explaining of basic visa concepts.`;
 }
 
-// ── Simple markdown → HTML renderer ──
-function renderMarkdown(md) {
-  const out = document.getElementById('output');
-  let html = md
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/^#### (.+)$/gm,'<h4>$1</h4>')
-    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
-    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/`(.+?)`/g,'<code>$1</code>')
-    .replace(/^---+$/gm,'<hr>')
-    .replace(/^&gt; (.+)$/gm,'<blockquote><p>$1</p></blockquote>')
-    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
-    .replace(/^[-*] (.+)$/gm,'<li>$1</li>')
-    .replace(/(<li>.*<\/li>\n?)+/g, m => '<ul>' + m + '</ul>')
-    .replace(/\n\n+/g,'</p><p>')
-    .replace(/\n/g,'<br>');
-  html = '<p>' + html + '</p>';
-  html = html.replace(/<p>(<h[1-4]>)/g,'$1').replace(/(<\/h[1-4]>)<\/p>/g,'$1');
-  html = html.replace(/<p>(<ul>)/g,'$1').replace(/(<\/ul>)<\/p>/g,'$1');
-  html = html.replace(/<p>(<hr>)<\/p>/g,'$1');
-  html = html.replace(/<p><\/p>/g,'').replace(/<p><br>/g,'<p>');
-  out.innerHTML = html;
-}
+
 </script>
 <script>
-// ── Proxy health check ──
-async function checkProxy() {
-  try {
-    const r = await fetch(PROXY() + '/health', { signal: AbortSignal.timeout(1500) });
-    return r.ok;
-  } catch { return false; }
-}
-
-async function updateProxyStatus() {
-  const ok = await checkProxy();
-  const dot = document.getElementById('proxy-dot');
-  const lbl = document.getElementById('proxy-label');
-  dot.className = 'status-dot ' + (ok ? 'ok' : 'err');
-  lbl.textContent = ok ? 'Proxy running' : 'Proxy offline — run proxy.py';
-  return ok;
-}
-
-// ── Run strategy ──
-async function runStrategy() {
-  if (isRunning) return;
-
-  const key = localStorage.getItem('apiKey') || '';
-  const proxyOk = await updateProxyStatus();
-
-  if (!proxyOk) {
-    document.getElementById('proxy-error').style.display = 'block';
-    openSettings();
-    return;
-  }
-  if (!key) { openSettings(); return; }
-
-  isRunning = true;
-  const btn = document.getElementById('run-btn');
-  btn.disabled = true;
-  btn.classList.add('running');
-
-  const out = document.getElementById('output');
-  out.innerHTML = '<span class="cursor"></span>';
-  let fullText = '';
-
-  const prompt = buildPrompt();
+// ── Open in Claude.ai ──
+function openInClaude() {
   const system = `You are a MARA-registered senior Australian migration lawyer with 15+ years practice specialising in skilled ICT migration. Write in direct expert language — the applicant understands migration well. Use specific subclass numbers, ANZSCO codes, effective dates, points figures. No explaining of basic visa concepts. Use markdown headers (##), bullet points, and bold for key figures.`;
-
-  try {
-    const res = await fetch(PROXY() + '/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...(key && { apiKey: key }),  // only sent for local proxy; Cloudflare Worker ignores it
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
-        stream: true,
-        system,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: 'Unknown error' }));
-      out.innerHTML = `<div style="color:var(--red);font-size:13px">API Error: ${err.error?.message || JSON.stringify(err)}</div>`;
-      return;
-    }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buf = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buf += decoder.decode(value, { stream: true });
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const raw = line.slice(6).trim();
-        if (raw === '[DONE]' || raw === '') continue;
-        try {
-          const ev = JSON.parse(raw);
-          const delta = ev.delta?.text || '';
-          if (delta) {
-            fullText += delta;
-            renderMarkdown(fullText);
-            out.insertAdjacentHTML('beforeend', '<span class="cursor"></span>');
-            out.closest('#output-wrap').scrollTop = out.closest('#output-wrap').scrollHeight;
-          }
-        } catch (_) {}
-      }
-    }
-
-    // Final render without cursor
-    renderMarkdown(fullText);
-    saveStrategy(fullText);
-    document.getElementById('meta-run').textContent = 'Run: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' });
-    document.getElementById('stale-banner').classList.remove('visible');
-
-  } catch (e) {
-    out.innerHTML = `<div style="color:var(--red);font-size:13px">Error: ${e.message}</div>`;
-  } finally {
-    isRunning = false;
-    btn.disabled = false;
-    btn.classList.remove('running');
-  }
-}
-
-// ── Settings modal ──
-function openSettings() {
-  document.getElementById('proxy-input').value = localStorage.getItem('proxyUrl') || '';
-  document.getElementById('key-input').value = localStorage.getItem('apiKey') || '';
-  document.getElementById('modal-bg').classList.add('open');
-}
-function closeSettings() {
-  document.getElementById('modal-bg').classList.remove('open');
-  document.getElementById('proxy-error').style.display = 'none';
-}
-function saveSettings() {
-  const url = document.getElementById('proxy-input').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('key-input').value.trim();
-  if (url) localStorage.setItem('proxyUrl', url);
-  if (key) localStorage.setItem('apiKey', key);
-  closeSettings();
-  updateProxyStatus();
+  const prompt = buildPrompt();
+  const full = system + '\n\n' + prompt;
+  window.open('https://claude.ai/new?q=' + encodeURIComponent(full), '_blank', 'noopener');
 }
 
 // ── Init ──
@@ -653,10 +392,6 @@ function saveSettings() {
   setEnglish(englishLevel);
   await loadMonitoringData();
   renderIntel();
-  const hadSaved = loadSavedStrategy();
-  if (hadSaved) checkStale();
-  updateProxyStatus();
-  setInterval(updateProxyStatus, 30000);
 })();
 </script>
 </body>

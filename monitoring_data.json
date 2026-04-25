@@ -1,7 +1,7 @@
 {
-  "generated": "2026-04-25T19:08:31+10:00",
+  "generated": "2026-04-25T19:38:39.619491+10:00",
   "date_display": "25 Apr 2026",
-  "time_display": "19:08 AEST",
+  "time_display": "19:38 AEST",
   "has_critical": true,
   "action_required": "Verify your Victoria ROI is submitted and active in the Live in Melbourne portal before 4:00 PM AEST Tuesday 28 April 2026.",
   "findings": [
@@ -10,8 +10,8 @@
       "priority": "critical",
       "star": true,
       "category": "PATH A",
-      "title": "VICTORIA ROI CLOSES 28 APRIL 2026",
-      "body": "Victoria's 2025-26 state-nominated skilled visa program closes to ALL new Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) is near exhaustion. ICT occupations featured strongly in 2025-26 rounds including the most recent round on 17 March 2026.",
+      "title": "VICTORIA ROI CLOSES 28 APRIL 2026 \u2014 2d LEFT",
+      "body": "Victoria's 2025-26 state-nominated skilled visa program closes to ALL new Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) is near exhaustion. ICT occupations featured strongly in 2025-26 rounds.",
       "url": "https://liveinmelbourne.vic.gov.au/news-events/news/2026/update-on-victorias-skilled-visa-nomination-program-2025-26",
       "deadline_iso": "2026-04-28T16:00:00+10:00"
     },
@@ -21,7 +21,7 @@
       "star": true,
       "category": "PATH B",
       "title": "482 SID VISA OVERHAUL ENACTED 18 APR 2026",
-      "body": "Regulations gazetted 18 April 2026 formally replace subclass 482 TSS with three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), Core Skills (new CSOL), Essential Skills (labour agreement). 186 TRT qualifying period confirmed at 2 years on SID. Job mobility extended from 60 to 180 days.",
+      "body": "Regulations gazetted 18 April 2026 replace subclass 482 TSS with three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), Core Skills (new CSOL), Essential Skills (labour agreement). 186 TRT qualifying period confirmed at 2 years on SID. Job mobility extended from 60 to 180 days.",
       "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/skills-in-demand-visa-subclass-482",
       "deadline_iso": null
     },
@@ -41,7 +41,7 @@
       "star": true,
       "category": "PATH C",
       "title": "189 Q4 ROUND IMMINENT \u2014 NO DRAW ISSUED YET",
-      "body": "No subclass 189 invitation issued for Q4 (Apr\u2013Jun 2026) as at 24 Apr. Q1 round (13 Nov 2025) issued ~10,000 invitations. ANZSCO 261111 typically requires 85\u201390+ pts under Ministerial Direction 105. Rounds open without notice.",
+      "body": "No subclass 189 invitation issued for Q4 (Apr\u2013Jun 2026) as at 25 Apr. Q1 round (13 Nov 2025) issued ~10,000 invitations. ANZSCO 261111 typically requires 85\u201390+ pts. Rounds open without notice.",
       "url": "https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds",
       "deadline_iso": null
     },
@@ -51,7 +51,7 @@
       "star": false,
       "category": "SIGNAL",
       "title": "NSW APRIL ROUNDS CONSUMING NATIONAL QUOTA",
-      "body": "NSW 190 round completed w/c 13 April; 491 Pathway 2 round scheduled w/c 27 April. Multi-state drawdown of 20,350-place program year signals accelerating quota consumption.",
+      "body": "NSW 190 round completed w/c 13 April; 491 Pathway 2 round scheduled w/c 27 April. Multi-state drawdown of the 20,350-place program year signals accelerating quota consumption \u2014 reinforces urgency of Victoria 28 Apr deadline.",
       "url": "https://www.inclusivemigration.com.au/news/nsw-will-be-conducting-upcoming-subclass-190-amp-491-invitation-rounds-in-april-2026",
       "deadline_iso": null
     }
