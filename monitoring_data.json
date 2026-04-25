@@ -1,7 +1,7 @@
 {
-  "generated": "2026-04-25T19:38:39.619491+10:00",
-  "date_display": "25 Apr 2026",
-  "time_display": "19:38 AEST",
+  "generated": "2026-04-26T09:36:56.881048+10:00",
+  "date_display": "26 Apr 2026",
+  "time_display": "09:36 AEST",
   "has_critical": true,
   "action_required": "Verify your Victoria ROI is submitted and active in the Live in Melbourne portal before 4:00 PM AEST Tuesday 28 April 2026.",
   "findings": [
@@ -36,12 +36,12 @@
       "deadline_iso": "2026-07-01T00:00:00+10:00"
     },
     {
-      "id": "189-q4-pending",
+      "id": "189-q4-issued",
       "priority": "monitor",
       "star": true,
       "category": "PATH C",
-      "title": "189 Q4 ROUND IMMINENT \u2014 NO DRAW ISSUED YET",
-      "body": "No subclass 189 invitation issued for Q4 (Apr\u2013Jun 2026) as at 25 Apr. Q1 round (13 Nov 2025) issued ~10,000 invitations. ANZSCO 261111 typically requires 85\u201390+ pts. Rounds open without notice.",
+      "title": "189 Q4 ROUND ISSUED \u2014 CHECK EOI",
+      "body": "A subclass 189 invitation round has been issued for Q4 2026. Check your SkillSelect EOI status immediately. ANZSCO 261111 typically requires 85\u201390+ pts under Ministerial Direction 105.",
       "url": "https://immi.homeaffairs.gov.au/visas/working-in-australia/skillselect/invitation-rounds",
       "deadline_iso": null
     },
