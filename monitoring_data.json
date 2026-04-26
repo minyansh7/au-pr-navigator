@@ -1,7 +1,7 @@
 {
-  "generated": "2026-04-26T09:36:56.881048+10:00",
-  "date_display": "26 Apr 2026",
-  "time_display": "09:36 AEST",
+  "generated": "2026-04-27T09:37:36.095677+10:00",
+  "date_display": "27 Apr 2026",
+  "time_display": "09:37 AEST",
   "has_critical": true,
   "action_required": "Verify your Victoria ROI is submitted and active in the Live in Melbourne portal before 4:00 PM AEST Tuesday 28 April 2026.",
   "findings": [
@@ -10,7 +10,7 @@
       "priority": "critical",
       "star": true,
       "category": "PATH A",
-      "title": "VICTORIA ROI CLOSES 28 APRIL 2026 \u2014 2d LEFT",
+      "title": "VICTORIA ROI CLOSES 28 APRIL 2026 \u2014 1d LEFT",
       "body": "Victoria's 2025-26 state-nominated skilled visa program closes to ALL new Registrations of Interest at 4:00 PM AEST on Tuesday 28 April. The 3,400-place allocation (subclasses 190 & 491, down 32% on 2024-25) is near exhaustion. ICT occupations featured strongly in 2025-26 rounds.",
       "url": "https://liveinmelbourne.vic.gov.au/news-events/news/2026/update-on-victorias-skilled-visa-nomination-program-2025-26",
       "deadline_iso": "2026-04-28T16:00:00+10:00"
