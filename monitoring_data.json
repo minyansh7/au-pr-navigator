@@ -1,7 +1,7 @@
 {
-  "generated": "2026-06-30T10:02:41.434324+10:00",
-  "date_display": "30 Jun 2026",
-  "time_display": "10:02 AEST",
+  "generated": "2026-07-01T10:03:57.425736+10:00",
+  "date_display": "1 Jul 2026",
+  "time_display": "10:03 AEST",
   "has_critical": false,
   "action_required": null,
   "findings": [
@@ -14,16 +14,6 @@
       "body": "Regulations gazetted 18 April 2026 replace subclass 482 TSS with three-stream Skills in Demand (SID): Specialist Skills (SSIT $141,210+), Core Skills (new CSOL), Essential Skills (labour agreement). 186 TRT qualifying period confirmed at 2 years on SID. Job mobility extended from 60 to 180 days.",
       "url": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/skills-in-demand-visa-subclass-482",
       "deadline_iso": null
-    },
-    {
-      "id": "csit-indexation",
-      "priority": "important",
-      "star": false,
-      "category": "PATH B",
-      "title": "CSIT RISES TO $79,499 FROM 1 JULY 2026",
-      "body": "Core Skills Income Threshold auto-indexes to $79,499 (SSIT to $146,717) from 1 July 2026 under AWOTE indexation (Reg 5.42A). Legacy TSMIT ($76,515) requires separate ministerial instrument. Any 186 TRT nomination lodged on or after 1 July 2026 must meet the new floor.",
-      "url": "https://workingin.com.au/news/new-income-thresholds-from-1-july-2026/",
-      "deadline_iso": "2026-07-01T00:00:00+10:00"
     },
     {
       "id": "189-q4-issued",
